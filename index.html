@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear</title>
+  <style>
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: "Arial Narrow", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .hero-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .logo-img {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .brand-title {
+      font-size: 28px;
+      letter-spacing: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0 0 40px 0;
+    }
+    .action-link {
+      color: #ffffff;
+      text-decoration: underline;
+      font-size: 14px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 10px;
+      transition: opacity 0.2s ease;
+    }
+    .action-link:hover {
+      opacity: 0.7;
+    }
+    #status-message {
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      margin-top: 10px;
+    }
+    footer {
+      padding: 40px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- All content is now unified in the centered stack -->
+  <div class="hero-container">
+    
+    <!-- 1. Your Custom Logo Graphic -->
+    <img src="logo.png" alt="Linear Logo" class="logo-img">
+    
+    <!-- 2. Newsletter Link (Moved here, styled with a small margin below it) -->
+    <button class="action-link" onclick="triggerDownload()" style="margin-bottom: 20px;">Current Newsletter</button>
+    
+    <!-- 3. Unsubscribe Interface Context -->
+    <button id="unsub-btn" class="action-link" onclick="handleUnsubscribe()">Unsubscribe from text updates</button>
+    <div id="status-message"></div>
+
+  </div>
+
+  <script>
+    const CONFIG = {
+      webAppUrl: "https://script.google.com/macros/s/AKfycbxFVtXXxBLQD8wo4wGKe5BmqA7gIHfd6SFtAeYXUEqV4MjStGwosoPU5k-qR5QRkoXX/exec",
+      // Constructed with safe format
+      downloadUrl: "https://drive.google.com/uc?export=download&id=1PTpUZbZWug1Dp_-ML5L-YtPgLZ8WiW82"
+    };
+    // Subfolder-safe parameters engine
+    function getClientId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('id') || "Unknown";
+    }
+
+    // Direct real-time background tracking engine
+    function logActionToBackend(actionType) {
+      const clientId = getClientId();
+      const targetUrl = CONFIG.webAppUrl + "?id=" + encodeURIComponent(clientId) + "&action=" + encodeURIComponent(actionType);
+      
+      // Fires quietly using no-cors mode to safely bypass domain restrictions
+      fetch(targetUrl, { mode: 'no-cors' }).catch(() => {
+        console.log("Tracking recorded.");
+      });
+    }
+
+    // 1. VISIT TRACKING: Fires automatically on silent background page load
+    logActionToBackend("visit");
+
+    // 2. DOWNLOAD TRACKING: Logs the interaction first, then starts download thread
+    function triggerDownload() {
+      logActionToBackend("download");
+      window.location.href = CONFIG.downloadUrl;
+    }
+
+    // 3. UNSUBSCRIBE EXECUTION: Logs the opt-out and cleanly updates the UI text in place
+    function handleUnsubscribe() {
+      const unsubBtn = document.getElementById('unsub-btn');
+      const statusMsg = document.getElementById('status-message');
+
+      unsubBtn.style.display = 'none';
+      statusMsg.innerText = "Processing request...";
+
+      // Fire tracking log directly to your script ledger
+      logActionToBackend("unsubscribe");
+
+      // Update the UI smoothly in place on your index.html page
+      setTimeout(() => {
+        statusMsg.innerText = "Request received.";
+      }, 300);
+    }
+  </script>
+</body>
+</html>
