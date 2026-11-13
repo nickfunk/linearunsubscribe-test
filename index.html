@@ -80,7 +80,73 @@
     <!-- 3. Unsubscribe Interface Context -->
     <button id="unsub-btn" class="action-link" onclick="handleUnsubscribe()">Unsubscribe from text updates</button>
     <div id="status-message"></div>
-
+    <!-- Custom Substack Signup Form for LINEAR -->
+    <div class="custom-substack-container">
+      <form action="https://substack.com" method="post" target="_blank">
+        <label for="substack-email">Subscribe to our monthly newsletter</label>
+        <div class="form-row">
+          <input type="email" name="email" id="substack-email" placeholder="Enter your email address" required />
+          <button type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+    
+    <style>
+      .custom-substack-container {
+        width: 100%;
+        max-width: 420px;
+        margin: 20px auto;
+        font-family: "Arial Narrow", Arial, sans-serif;
+        text-align: center;
+      }
+      .custom-substack-container label {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 14px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #ffffff;
+      }
+      .form-row {
+        display: flex;
+        gap: 8px;
+      }
+      .custom-substack-container input[type="email"] {
+        flex: 1;
+        padding: 10px 12px;
+        background-color: #000000;
+        color: #ffffff;
+        border: 1px solid #ffffff;
+        border-radius: 0px;
+        font-family: inherit;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+      }
+      .custom-substack-container input[type="email"]::placeholder {
+        color: #999999;
+      }
+      .custom-substack-container input[type="email"]:focus {
+        outline: none;
+        border-color: #cccccc;
+      }
+      .custom-substack-container button {
+        padding: 10px 18px;
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #ffffff;
+        border-radius: 0px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+      }
+      .custom-substack-container button:hover {
+        opacity: 0.7;
+      }
+    </style>
   </div>
 
   <script>
