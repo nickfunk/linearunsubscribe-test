@@ -77,12 +77,9 @@
     <!-- 2. Newsletter Link (Moved here, styled with a small margin below it) -->
     <button class="action-link" onclick="triggerDownload()" style="margin-bottom: 20px;">Current Newsletter</button>
     
-    <!-- 3. Unsubscribe Interface Context -->
-    <button id="unsub-btn" class="action-link" onclick="handleUnsubscribe()">Unsubscribe from text updates</button>
-    <div id="status-message"></div>
-    <!-- Custom Substack Signup Form for LINEAR -->
+    <!-- 3. Custom Substack Signup Form for LINEAR -->
     <div class="custom-substack-container">
-      <form action="https://substack.com" method="post" target="_blank">
+      <form action="https://nickfunk.substack.com" method="post" target="_blank">
         <label for="substack-email">Subscribe to our monthly newsletter</label>
         <div class="form-row">
           <input type="email" name="email" id="substack-email" placeholder="Enter your email address" required />
@@ -90,7 +87,9 @@
         </div>
       </form>
     </div>
-    
+    <!-- 4. Unsubscribe Interface Context -->
+    <button id="unsub-btn" class="action-link" onclick="handleUnsubscribe()">Unsubscribe from text updates</button>
+    <div id="status-message"></div>
     <style>
       .custom-substack-container {
         width: 100%;
