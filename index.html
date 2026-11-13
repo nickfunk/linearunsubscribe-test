@@ -65,6 +65,41 @@
     footer {
       padding: 40px 20px;
     }
+    .custom-substack-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 12px auto;
+      font-family: "Arial Narrow", Arial, sans-serif;
+      text-align: center;
+    }
+    .subscribe-label {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .subscribe-btn {
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 20px;
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid #ffffff;
+      border-radius: 0px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+    .subscribe-btn:hover {
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
@@ -78,76 +113,16 @@
     <!-- 2. Newsletter Link (Moved here, styled with a small margin below it) -->
     <button class="action-link" onclick="triggerDownload()" style="margin-bottom: 0px;">Current Newsletter</button>
     
-    <!-- 3. Custom Substack Signup Form for LINEAR -->
+    <!-- 3. Custom Substack link for LINEAR -->
     <div class="custom-substack-container">
-      <form action="https://nickfunk.substack.com" method="post" target="_blank">
-        <label for="substack-email">Prefer email updates?</label>
-        <div class="form-row">
-          <input type="email" name="email" id="substack-email" placeholder="Enter your email address" required />
-          <button type="submit">Subscribe</button>
-        </div>
-      </form>
+    <p class="subscribe-label">Prefer email updates?</p>
+    <a href="https://nickfunk.substack.com" target="_blank" rel="noopener noreferrer" class="subscribe-btn">
+      Subscribe
+    </a>
     </div>
     <!-- 4. Unsubscribe Interface Context -->
     <button id="unsub-btn" class="action-link" onclick="handleUnsubscribe()">Unsubscribe from text updates</button>
     <div id="status-message"></div>
-    <style>
-      .custom-substack-container {
-        width: 100%;
-        max-width: 300px;
-        margin: 0px auto;
-        font-family: "Arial Narrow", Arial, sans-serif;
-        text-align: center;
-      }
-      .custom-substack-container label {
-        display: block;
-        margin-bottom: 4px;
-        font-size: 14px;
-        letter-spacing: 1px;
-        color: #ffffff;
-      }
-      .form-row {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .custom-substack-container input[type="email"] {
-        flex: 1;
-        padding: 10px 12px;
-        background-color: #000000;
-        color: #ffffff;
-        border: 1px solid #ffffff;
-        border-radius: 0px;
-        font-family: inherit;
-        font-size: 14px;
-        letter-spacing: 0.5px;
-      }
-      .custom-substack-container input[type="email"]::placeholder {
-        color: #999999;
-      }
-      .custom-substack-container input[type="email"]:focus {
-        outline: none;
-        border-color: #cccccc;
-      }
-      .custom-substack-container button {
-        padding: 10px 18px;
-        background-color: #ffffff;
-        color: #000000;
-        border: 1px solid #ffffff;
-        border-radius: 0px;
-        font-family: inherit;
-        font-size: 14px;
-        font-weight: bold;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: opacity 0.2s ease;
-        align-self: center;
-        width: 160px;
-      }
-      .custom-substack-container button:hover {
-        opacity: 0.7;
-      }
     </style>
   </div>
 
