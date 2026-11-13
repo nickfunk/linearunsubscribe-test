@@ -81,7 +81,7 @@
     <!-- 3. Custom Substack Signup Form for LINEAR -->
     <div class="custom-substack-container">
       <form action="https://nickfunk.substack.com" method="post" target="_blank">
-        <label for="substack-email">Subscribe to our monthly newsletter</label>
+        <label for="substack-email">Prefer email updates?</label>
         <div class="form-row">
           <input type="email" name="email" id="substack-email" placeholder="Enter your email address" required />
           <button type="submit">Subscribe</button>
@@ -108,6 +108,7 @@
       }
       .form-row {
         display: flex;
+        flex-direction: column;
         gap: 8px;
       }
       .custom-substack-container input[type="email"] {
