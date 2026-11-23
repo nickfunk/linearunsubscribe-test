@@ -62,6 +62,21 @@
       color: #ffffff;
       margin-top: 10px;
     }
+    .undo-link {
+      color: #ffffff;
+      text-decoration: underline;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      padding: 0 0 0 6px;
+      transition: opacity 0.2s ease;
+    }
+    .undo-link:hover {
+      opacity: 0.7;
+    }
     footer {
       padding: 40px 20px;
     }
@@ -99,79 +114,177 @@
     .subscribe-btn:hover {
       opacity: 0.7;
     }
+    /* Prominent view for direct email unsubscribe links */
+    #email-unsub-view {
+      display: none;
+      max-width: 380px;
+      margin-top: 16px;
+    }
+    .unsub-heading {
+      font-size: 18px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin: 0 0 10px 0;
+    }
+    .unsub-subtext {
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      color: #cccccc;
+      line-height: 1.5;
+      margin: 0 0 24px 0;
+    }
+    .outline-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      border-radius: 0px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+    .outline-btn:hover {
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
-
-  <!-- All content is now unified in the centered stack -->
+  <!-- All content is unified in the centered stack -->
   <div class="hero-container">
-    
-    <!-- 1. Your Custom Logo Graphic -->
+    <!-- 1. Custom Logo Graphic -->
     <img src="logo.png" alt="Linear Logo" class="logo-img">
-    
-    <!-- 2. Newsletter Link (Moved here, styled with a small margin below it) -->
-    <button class="action-link" onclick="triggerDownload()" style="margin-bottom: 0px;">Current Newsletter</button>
-    
-    <!-- 3. Custom Substack link for LINEAR -->
-    <div class="custom-substack-container">
-    <p class="subscribe-label">Prefer email updates? Get notified through Substack when a fresh newsletter drops.</p>
-    <a href="https://nickfunk.substack.com/subscribe" target="_blank" rel="noopener noreferrer" class="subscribe-btn">
-      Subscribe
-    </a>
+
+    <!-- 2. Standard Homepage Content -->
+    <div id="main-content" style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%;">
+      <button class="action-link" onclick="triggerDownload()" style="margin-bottom: 0px;">Current Newsletter</button>
+
+      <!-- Custom Substack link for LINEAR -->
+      <div class="custom-substack-container">
+        <p class="subscribe-label">Prefer email updates? Get notified through Substack when a fresh newsletter drops.</p>
+        <a href="https://substack.com" target="_blank" rel="noopener noreferrer" class="subscribe-btn">
+          Subscribe
+        </a>
+      </div>
+
+      <!-- Text Unsubscribe Interface -->
+      <button id="unsub-btn" class="action-link" onclick="handleTextUnsubscribe()">Unsubscribe from text updates</button>
+      <div id="status-message"></div>
     </div>
-    <!-- 4. Unsubscribe Interface Context -->
-    <button id="unsub-btn" class="action-link" onclick="handleUnsubscribe()">Unsubscribe from text updates</button>
-    <div id="status-message"></div>
-    </style>
+
+    <!-- 3. Prominent Email Unsubscribe View (Hidden unless ?action=unsubscribe_email) -->
+    <div id="email-unsub-view">
+      <h2 id="email-unsub-heading" class="unsub-heading">Request Received</h2>
+      <p id="email-unsub-subtext" class="unsub-subtext">You have been unsubscribed from future email updates.</p>
+      <button id="email-undo-btn" class="outline-btn" onclick="handleEmailUndo()">Undo</button>
+    </div>
   </div>
 
   <script>
     const CONFIG = {
-      webAppUrl: "https://script.google.com/macros/s/AKfycbxFVtXXxBLQD8wo4wGKe5BmqA7gIHfd6SFtAeYXUEqV4MjStGwosoPU5k-qR5QRkoXX/exec",
-      // Constructed with safe format
-      downloadUrl: "https://drive.google.com/file/d/1GC4X4XdO6bEHKz3rdgE377_xHC76Iwu2/view?usp=drive_link"
+      webAppUrl: "https://google.com",
+      downloadUrl: "https://google.com"
     };
-    // Subfolder-safe parameters engine
+
+    const urlParams = new URLSearchParams(window.location.search);
+
     function getClientId() {
-      const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('id') || "Unknown";
     }
 
-    // Direct real-time background tracking engine
     function logActionToBackend(actionType) {
       const clientId = getClientId();
       const targetUrl = CONFIG.webAppUrl + "?id=" + encodeURIComponent(clientId) + "&action=" + encodeURIComponent(actionType);
-      
-      // Fires quietly using no-cors mode to safely bypass domain restrictions
+
       fetch(targetUrl, { mode: 'no-cors' }).catch(() => {
         console.log("Tracking recorded.");
       });
     }
 
-    // 1. VISIT TRACKING: Fires automatically on silent background page load
-    logActionToBackend("visit");
+    // --- INITIALIZATION ON PAGE LOAD ---
+    const initialAction = urlParams.get('action');
 
-    // 2. DOWNLOAD TRACKING: Logs the interaction first, then starts download thread
+    if (initialAction === "unsubscribe_email") {
+      // Show only logo + prominent confirmation screen
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('email-unsub-view').style.display = 'block';
+
+      if (getClientId() !== "Unknown") {
+        logActionToBackend("unsubscribe_email");
+      } else {
+        document.getElementById('email-unsub-subtext').innerText = "Only valid via personal link.";
+        document.getElementById('email-undo-btn').style.display = 'none';
+      }
+    } else {
+      // Standard page visit
+      logActionToBackend("visit");
+    }
+
+    // --- NEWSLETTER DOWNLOAD ---
     function triggerDownload() {
       logActionToBackend("download");
       window.location.href = CONFIG.downloadUrl;
     }
 
-    // 3. UNSUBSCRIBE EXECUTION: Logs the opt-out and cleanly updates the UI text in place
-    function handleUnsubscribe() {
-      const unsubBtn = document.getElementById('unsub-btn');
+    // --- TEXT UNSUBSCRIBE + UNDO FLOW ---
+    function handleTextUnsubscribe() {
       const statusMsg = document.getElementById('status-message');
 
+      // Ignore unknown visitors without logging to sheet
+      if (getClientId() === "Unknown") {
+        statusMsg.innerText = "Only valid via personal link.";
+        return;
+      }
+
+      const unsubBtn = document.getElementById('unsub-btn');
       unsubBtn.style.display = 'none';
       statusMsg.innerText = "Processing request...";
 
-      // Fire tracking log directly to your script ledger
       logActionToBackend("unsubscribe");
 
-      // Update the UI smoothly in place on your index.html page
       setTimeout(() => {
-        statusMsg.innerText = "Request received.";
+        statusMsg.innerHTML = 'Request received. <button class="undo-link" onclick="handleTextUndo()">Undo</button>';
       }, 300);
+    }
+
+    function handleTextUndo() {
+      const unsubBtn = document.getElementById('unsub-btn');
+      const statusMsg = document.getElementById('status-message');
+
+      statusMsg.innerText = "Restoring preference...";
+      logActionToBackend("resubscribe");
+
+      setTimeout(() => {
+        statusMsg.innerText = "Preference restored.";
+        unsubBtn.style.display = 'inline-block';
+      }, 300);
+    }
+
+    // --- EMAIL UNSUBSCRIBE UNDO FLOW ---
+    let emailUnsubscribed = true;
+
+    function handleEmailUndo() {
+      const heading = document.getElementById('email-unsub-heading');
+      const subtext = document.getElementById('email-unsub-subtext');
+      const undoBtn = document.getElementById('email-undo-btn');
+
+      if (emailUnsubscribed) {
+        logActionToBackend("resubscribe_email");
+        heading.innerText = "Preference Restored";
+        subtext.innerText = "You remain subscribed to future email updates.";
+        undoBtn.innerText = "Unsubscribe Again";
+        emailUnsubscribed = false;
+      } else {
+        logActionToBackend("unsubscribe_email");
+        heading.innerText = "Request Received";
+        subtext.innerText = "You have been unsubscribed from future email updates.";
+        undoBtn.innerText = "Undo";
+        emailUnsubscribed = true;
+      }
     }
   </script>
 </body>
